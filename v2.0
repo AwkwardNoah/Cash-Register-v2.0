@@ -1,0 +1,85 @@
+function StaffMember(name,discountPercent){
+    this.name = name;
+    this.discountPercent = discountPercent;
+}
+
+var sally = new StaffMember("Sally",5);
+var bob = new StaffMember("Bob",10);
+
+// Create yourself again as 'me' with a staff discount of 20%
+var me = new StaffMember("Noah",20);
+
+var cashRegister = {
+    total:0,
+    change:0,
+    teller:0,
+    lastTransactionAmount:0,
+    add: function(itemCost){
+        this.total += (itemCost || 0);
+        this.lastTransactionAmount = itemCost;
+    },
+    scan: function(item,quantity,salePercent){
+        switch (item){
+        case "eggs":
+            if (salePercent > 0) {
+              this.add(1.50 * quantity - (1.50 * quantity * (salePercent / 100)));
+            } else {
+              this.add(1.50);
+            }
+            break;
+        case "milk":
+            if (salePercent > 0) {
+              this.add(4.30 * quantity - (4.30 * quantity * (salePercent / 100)));
+            } else {
+              this.add(4.30);
+            }
+            break;
+        case "magazine":
+            if (salePercent > 0) {
+              this.add(4.99 * quantity - (4.99 * quantity * (salePercent / 100)));
+            } else {
+              this.add(4.99);
+            }
+            break;
+        case "chocolate":if (salePercent > 0) {
+              this.add(0.99 * quantity - (0.99 * quantity * (salePercent / 100)));
+            } else {
+              this.add(0.99);
+            } break;
+        }
+        return true;
+    },
+    voidLastTransaction : function(){
+        this.total -= this.lastTransactionAmount;
+        this.lastTransactionAmount = 0;
+    },
+    // Create a new method applyStaffDiscount here
+    applyStaffDiscount: function(employee) {
+        this.total -= this.total * (employee.discountPercent / 100);
+    },
+    returnBill:function() {
+      console.log("Your bill is $" + this.total.toFixed(2));
+    },
+    returnChange: function(paid) {
+      if (paid > 0) {
+        this.change = paid - this.total;
+        console.log("Your change is $" + this.change.toFixed(2));
+      }
+    },
+	returnTeller: function() {
+          this.teller =+ this.total;
+          console.log("The register has $" + this.teller.toFixed(2));
+	}
+};
+
+cashRegister.scan('eggs',2,20);
+cashRegister.scan('milk',1,0);
+cashRegister.scan('magazine',3,0);
+// Apply your staff discount by passing the 'me' object
+// to applyStaffDiscount
+cashRegister.applyStaffDiscount(me);
+
+// Show the total bill
+cashRegister.returnBill();
+cashRegister.returnChange(20);
+cashRegister.returnTeller();
